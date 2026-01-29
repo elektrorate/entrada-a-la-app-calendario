@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Card, KpiCard, Button, Badge, Icon } from '../components/UI';
+import { Card, KpiCard, Button, Badge, Icon, ActivityPill, DaySelector } from '../components/UI';
 import { useNavigate } from 'react-router-dom';
 import { WorkshopStatus } from '../types';
 
@@ -9,104 +9,146 @@ export const Dashboard: React.FC = () => {
   const { workshops, activityLogs } = useAppContext();
   const navigate = useNavigate();
 
+  const days = [
+    { num: '17', name: 'Mon' },
+    { num: '18', name: 'Tue' },
+    { num: '19', name: 'Wed' },
+    { num: '20', name: 'Thu' },
+    { num: '21', name: 'Fri' },
+    { num: '22', name: 'Sat' },
+    { num: '23', name: 'Sun' }
+  ];
+
   return (
-    <div className="space-y-16 animate-fade-in">
+    <div className="space-y-20 animate-fade-in max-w-6xl mx-auto">
       
       {/* Analíticas Principales */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
         <KpiCard 
           title="Centros de Barro"
           value={workshops.filter(w => w.estado === WorkshopStatus.ACTIVE).length.toString().padStart(2, '0')}
-          subtitle="Red Global"
+          subtitle="Red Global Activa"
           subValue={workshops.length.toString().padStart(2, '0')}
           onAction={() => navigate('/talleres')}
         />
         <KpiCard 
-          title="Crecimiento Mensual"
-          value="€14.2k"
-          subtitle="Objetivo Q4"
-          subValue="+€2.1k"
+          title="Rendimiento Q4"
+          value="14.2k€"
+          subtitle="Objetivo Alcanzado"
+          subValue="+2.1k€"
           onAction={() => navigate('/reportes')}
         />
         
-        <div className="premium-card p-10 flex flex-col justify-between bg-white border-none shadow-xl">
-            <div className="space-y-4">
-                <div className="w-14 h-14 bg-[#1A1A1A] rounded-full flex items-center justify-center">
+        <div className="premium-card p-10 flex flex-col justify-between border-none bg-white">
+            <div className="space-y-6">
+                <div className="w-16 h-16 bg-[#C17D5C]/10 rounded-[28px] flex items-center justify-center text-[#C17D5C]">
                   <Icon.Target />
                 </div>
-                <h3 className="text-2xl font-extrabold tracking-tighter">Acceso Directo</h3>
-                <p className="text-sm text-gray-400 font-medium leading-relaxed">Configura los nuevos centros de producción y supervisa la actividad global.</p>
+                <div>
+                  <h3 className="text-3xl font-extrabold tracking-tighter text-[#312A2C] uppercase leading-none">Gestión de Red</h3>
+                  <div className="accent-line mt-4"></div>
+                </div>
+                <p className="text-[15px] text-[#8A8481] font-semibold leading-relaxed">Configura nuevos centros de producción y supervisa la actividad global.</p>
             </div>
-            <div className="space-y-4 mt-8">
-                <Button variant="primary" className="w-full justify-between shadow-lg" onClick={() => navigate('/talleres/nuevo')}>
-                    CREAR NUEVO TALLER
+            <div className="space-y-4 mt-10">
+                <Button variant="primary" className="w-full justify-between !py-6" onClick={() => navigate('/talleres/nuevo')}>
+                    NUEVA SEDE
                     <Icon.ArrowUpRight />
                 </Button>
-                <Button variant="outline" className="w-full justify-between" onClick={() => navigate('/talleres')}>
-                    GESTIONAR RED
+                <Button variant="outline" className="w-full justify-between border-transparent bg-[#F9F6F2] !py-6" onClick={() => navigate('/talleres')}>
+                    LISTADO TOTAL
                 </Button>
             </div>
         </div>
       </section>
 
-      {/* Actividad e Información */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-          
-          <div className="lg:col-span-2 space-y-8">
-              <div className="flex items-center justify-between px-2">
-                <h2 className="text-sm font-extrabold tracking-[0.3em] uppercase text-[#111111]">LÍNEA DE TIEMPO</h2>
-                <Badge variant="outline">TIEMPO REAL</Badge>
-              </div>
+      {/* SECCIÓN DAILY ACTIVITY (Inspirada en la referencia) */}
+      <section className="space-y-12">
+        <div className="flex items-center justify-between px-4">
+          <h2 className="text-5xl font-extrabold text-[#312A2C] tracking-tighter uppercase">Daily Activity</h2>
+          <div className="flex gap-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#F1E9E2]"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#F1E9E2]"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#F1E9E2]"></div>
+          </div>
+        </div>
+
+        <DaySelector days={days} activeDay="17" />
+
+        <div className="grid grid-cols-1 gap-6 max-w-4xl">
+          <ActivityPill 
+            label="Talleres" 
+            value="12 / 12 Activos" 
+            status="Completed" 
+            percentage="100%" 
+            iconBg="#C17D5C" 
+          />
+          <ActivityPill 
+            label="Facturación" 
+            value="1420 / 1680 €" 
+            status="In Progress" 
+            percentage="85%" 
+            iconBg="#8B6452" 
+          />
+          <ActivityPill 
+            label="Inscripciones" 
+            value="22 / 30 Pax" 
+            status="In Progress" 
+            percentage="73%" 
+            iconBg="#312A2C" 
+          />
+        </div>
+      </section>
+
+      {/* Distribución Geográfica */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch pb-10">
+          <Card className="bg-[#312A2C] text-white border-none p-12 space-y-12 shadow-2xl rounded-[48px]">
               <div className="space-y-4">
-                  {activityLogs.slice(0, 4).map(log => (
-                      <Card key={log.id} className="!p-6 group hover:border-[#111111]">
-                          <div className="flex items-center gap-6">
-                              <div className="w-14 h-14 bg-[#F2F2F2] rounded-full flex items-center justify-center text-xl group-hover:bg-[#F4D000] transition-colors">
-                                  {log.accion.includes('Taller') ? '🏺' : '👤'}
-                              </div>
-                              <div className="flex-1 overflow-hidden">
-                                  <p className="text-lg font-extrabold tracking-tight truncate">{log.accion.toUpperCase()}</p>
-                                  <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">{log.usuario} • {log.fecha}</p>
-                              </div>
-                              <Button variant="circular" size="sm" onClick={() => log.tallerId && navigate(`/talleres/${log.tallerId}`)}>
-                                <Icon.ArrowUpRight />
-                              </Button>
-                          </div>
-                      </Card>
-                  ))}
+                <p className="eyebrow !text-white/40">Notificaciones Críticas</p>
+                <div className="flex items-baseline gap-6">
+                    <span className="text-8xl font-extrabold text-[#C17D5C] tracking-tighter leading-none">04</span>
+                    <span className="text-[14px] text-white/50 font-bold uppercase tracking-[0.2em]">Talleres<br/>Sin Admin</span>
+                </div>
               </div>
-          </div>
-
-          <div className="space-y-8">
-              <h2 className="text-sm font-extrabold tracking-[0.3em] uppercase text-[#111111] px-2">RESUMEN GEOGRÁFICO</h2>
-              <Card className="bg-[#1A1A1A] text-white border-none p-10 space-y-10 shadow-2xl rounded-[40px]">
-                  <div className="space-y-3">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-gray-500">Alertas</p>
-                    <div className="flex items-baseline gap-4">
-                        <span className="text-6xl font-extrabold text-[#F4D000] tracking-tighter">04</span>
-                        <span className="text-sm text-gray-400 font-bold uppercase tracking-widest">Sin Admin</span>
-                    </div>
+              <div className="h-px bg-white/10 w-full"></div>
+              <div className="space-y-6">
+                  <div className="flex justify-between items-center group cursor-pointer">
+                      <p className="eyebrow !text-white/40 group-hover:!text-white transition-colors">ESPAÑA</p>
+                      <p className="text-3xl font-bold tracking-tighter">12</p>
                   </div>
-                  
-                  <div className="h-px bg-white/5 w-full"></div>
-
-                  <div className="space-y-6">
-                      <div className="flex justify-between items-center">
-                          <p className="text-sm font-bold tracking-widest text-gray-400">ESPAÑA</p>
-                          <p className="text-xl font-extrabold">12</p>
-                      </div>
-                      <div className="flex justify-between items-center">
-                          <p className="text-sm font-bold tracking-widest text-gray-400">PORTUGAL</p>
-                          <p className="text-xl font-extrabold">03</p>
-                      </div>
+                  <div className="flex justify-between items-center group cursor-pointer">
+                      <p className="eyebrow !text-white/40 group-hover:!text-white transition-colors">PORTUGAL</p>
+                      <p className="text-3xl font-bold tracking-tighter">03</p>
                   </div>
+              </div>
+              <Button variant="primary" className="w-full !py-7 !text-[14px] shadow-2xl">
+                  EXPORTAR ANALÍTICAS
+              </Button>
+          </Card>
 
-                  <Button variant="primary" className="w-full !py-6 text-xs tracking-[0.2em]">
-                      DESCARGAR DATA
-                  </Button>
-              </Card>
-          </div>
-      </div>
+          <Card className="!p-0 overflow-hidden relative border-none bg-white">
+            <div className="p-12 space-y-6">
+              <h3 className="text-2xl font-bold text-[#312A2C] tracking-tighter uppercase">Estado de la Red</h3>
+              <p className="text-[15px] text-[#8A8481] font-semibold leading-relaxed">
+                Supervisión activa del flujo de trabajo y ocupación media de los hornos en tiempo real.
+              </p>
+              <div className="space-y-6 pt-4">
+                <div className="w-full h-2 bg-[#F9F6F2] rounded-full overflow-hidden">
+                  <div className="h-full bg-[#C17D5C] w-[75%] rounded-full"></div>
+                </div>
+                <div className="flex justify-between eyebrow !text-[11px]">
+                  <span>Ocupación Global</span>
+                  <span>75%</span>
+                </div>
+              </div>
+            </div>
+            <div className="absolute bottom-0 right-0 p-8">
+               <div className="w-24 h-24 bg-[#C17D5C]/5 rounded-full flex items-center justify-center">
+                  <Icon.Chart />
+               </div>
+            </div>
+          </Card>
+      </section>
     </div>
   );
 };
