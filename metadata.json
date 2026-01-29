@@ -1,0 +1,7 @@
+{
+  "name": "Barro & Co. Admin Panel",
+  "description": "Un panel de administración completo para la gestión de talleres de cerámica, con funcionalidades de supervisión de administradores, mapas interactivos, reportes y gestión de invitaciones.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
