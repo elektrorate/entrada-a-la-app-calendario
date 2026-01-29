@@ -1,13 +1,13 @@
 
-import React from 'react';
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import { Toast, Button, Icon } from './UI';
+import { Toast, Icon } from './UI';
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { toast, currentUser, logout } = useAppContext();
-  const navigate = useNavigate();
+  const { toast, currentUser, logout, workshops, showToast } = useAppContext();
   const location = useLocation();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const getTitle = () => {
     const path = location.pathname;
@@ -23,6 +23,26 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     { to: '/reportes', label: 'ANALÍTICAS', icon: '🎯' },
   ];
 
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+      showToast('Datos sincronizados correctamente', 'success');
+    }, 1200);
+  };
+
+  const handleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        showToast(`Error al activar pantalla completa: ${err.message}`, 'error');
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  const alertsCount = workshops.filter(w => !w.adminGeneralUserId).length;
+
   return (
     <div className="min-h-screen bg-[#F2F2F2] lg:pl-[280px]">
       
@@ -30,7 +50,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[280px] bg-white border-r border-[#E6E6E6] flex-col p-10 z-50">
         <div className="flex flex-col items-center mb-16">
             <div className="w-16 h-16 bg-[#F4D000] rounded-[24px] flex items-center justify-center font-extrabold text-3xl shadow-lg mb-4">B</div>
-            <span className="font-extrabold tracking-tighter text-xl">Barro & Co.</span>
+            <span className="font-extrabold tracking-tighter text-xl text-[#111111]">Barro & Co.</span>
         </div>
         
         <nav className="flex-1 space-y-4">
@@ -59,7 +79,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                     <img src="https://picsum.photos/48/48" alt="Admin" />
                 </div>
                 <div className="overflow-hidden">
-                    <p className="text-[11px] font-extrabold truncate uppercase tracking-tighter">{currentUser?.nombre || 'Super Admin'}</p>
+                    <p className="text-[11px] font-extrabold truncate uppercase tracking-tighter text-[#111111]">{currentUser?.nombre || 'Super Admin'}</p>
                     <div className="flex items-center gap-1">
                       <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                       <p className="text-[10px] text-gray-500 font-bold uppercase">Online</p>
@@ -69,9 +89,36 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         </div>
       </aside>
 
-      {/* TopBar Premium Simplified */}
-      <header className="fixed top-0 left-0 lg:left-[280px] right-0 h-24 bg-[#F2F2F2]/90 backdrop-blur-xl z-40 px-10 flex items-center justify-center">
+      {/* TopBar Premium */}
+      <header className="fixed top-0 left-0 lg:left-[280px] right-0 h-24 bg-[#F2F2F2]/90 backdrop-blur-xl z-40 px-10 flex items-center justify-between">
         <h1 className="text-[12px] font-extrabold tracking-[0.4em] uppercase text-[#111111]">{getTitle()}</h1>
+        
+        {/* Toolbar de Acciones (Réplica de los iconos circled) */}
+        <div className="flex items-center gap-2">
+            <button 
+                onClick={handleRefresh}
+                className={`w-12 h-12 rounded-xl flex items-center justify-center text-gray-400 hover:text-black hover:bg-white/50 transition-all ${isRefreshing ? 'animate-spin text-black' : ''}`}
+                title="Sincronizar Datos"
+            >
+                <Icon.Refresh />
+            </button>
+            <button 
+                onClick={handleFullscreen}
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-gray-400 hover:text-black hover:bg-white/50 transition-all"
+                title="Pantalla Completa"
+            >
+                <Icon.Maximize />
+            </button>
+            <div className="w-px h-6 bg-gray-200 mx-2"></div>
+            <button className="w-12 h-12 rounded-xl flex items-center justify-center text-gray-400 hover:text-black hover:bg-white/50 transition-all relative">
+                <Icon.Bell />
+                {alertsCount > 0 && (
+                    <span className="absolute top-2.5 right-2.5 w-4 h-4 bg-red-500 border-2 border-[#F2F2F2] rounded-full flex items-center justify-center text-[8px] text-white font-bold">
+                        {alertsCount}
+                    </span>
+                )}
+            </button>
+        </div>
       </header>
 
       {/* Main Content */}
