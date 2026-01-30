@@ -10,15 +10,16 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <style>
         :root {
-            --bg-main: #FDF8F3; /* Fondo crema muy suave de la referencia */
+            --bg-main: #F9F6F2;
             --surface: #FFFFFF;
             --border: #F1E9E2;
-            --text-main: #312A2C; /* Texto oscuro cálido */
+            --pill-bg: #F4EEE8;
+            --text-main: #312A2C;
             --text-sec: #8A8481;
-            --accent: #C17D5C; /* Terracota de la referencia */
+            --accent: #C17D5C;
             --dark: #312A2C;
-            --radius-card: 40px;
-            --shadow-soft: 0 4px 20px -5px rgba(49, 42, 44, 0.03);
+            --radius-pill: 999px;
+            --radius-card: 48px;
         }
         body {
             font-family: 'Montserrat', sans-serif;
@@ -29,72 +30,69 @@
         }
         .premium-card {
             background: var(--surface);
-            border: 1px solid var(--border);
             border-radius: var(--radius-card);
-            box-shadow: var(--shadow-soft);
+            box-shadow: 0 10px 40px -10px rgba(49, 42, 44, 0.05);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .pill-card {
-            background: #F4EEE8; /* Fondo sutil para las píldoras de actividad */
-            border-radius: 999px;
-            padding: 16px 32px;
+        .activity-pill {
+            background: var(--pill-bg);
+            border-radius: var(--radius-pill);
+            padding: 24px 40px;
             display: flex;
             align-items: center;
             transition: all 0.3s ease;
         }
-        .pill-card:hover {
+        .activity-pill:hover {
             background: #EDE4DB;
-            transform: scale(1.01);
+            transform: translateY(-2px);
         }
-        .circular-btn {
-            border-radius: 999px;
+        .day-pill {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            width: 72px;
+            height: 110px;
+            border-radius: var(--radius-pill);
             transition: all 0.2s ease;
+            cursor: pointer;
         }
-        .circular-btn:active {
-            transform: scale(0.96);
+        .day-pill-active {
+            background-color: var(--dark);
+            color: white;
+            /* Eliminada sombra y elevación según solicitud */
         }
-        /* Custom Leaflet overrides */
-        .leaflet-container {
-            border-radius: var(--radius-card);
-            filter: sepia(0.2) contrast(0.9) brightness(1.05);
+        .eyebrow {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-sec);
         }
-        .marker-pin {
-            background: var(--accent) !important;
-            border: 2px solid white !important;
+        .title-huge {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+            line-height: 0.9;
         }
+        .accent-line {
+            height: 3px;
+            background-color: var(--accent);
+            width: 40px;
+            border-radius: 99px;
+        }
+        .leaflet-container { border-radius: var(--radius-card); }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #E0E0E0; border-radius: 10px; }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         
-        .eyebrow {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--text-sec);
-            font-size: 14px;
-            display: block;
-        }
-        
-        .accent-line {
-            height: 2px;
-            background-color: var(--accent);
-            width: 32px;
-        }
-
-        .day-selector-active {
-            background-color: var(--dark);
-            color: white;
-            box-shadow: 0 10px 20px -5px rgba(49, 42, 44, 0.3);
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 <script type="importmap">
 {

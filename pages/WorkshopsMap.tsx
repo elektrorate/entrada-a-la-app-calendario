@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Card, Badge, Button, Input, Select } from '../components/UI';
+import { Card, Badge, Button, Input, Select, Icon } from '../components/UI';
 import { WorkshopStatus, Workshop } from '../types';
 import { useNavigate } from 'react-router-dom';
 import { MockMap } from '../components/MockMap';
@@ -45,19 +45,22 @@ export const WorkshopsMap: React.FC = () => {
 
   return (
     <div className="h-[calc(100vh-140px)] flex flex-col gap-6 animate-fade-in">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2 shrink-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Mapa de Talleres</h1>
-          <p className="text-gray-500">Visualiza la distribución geográfica de tus centros</p>
+          <p className="eyebrow">Localización Global</p>
+          <h1 className="title-huge text-[#312A2C]">Mapa de Red</h1>
+          <div className="accent-line mt-2"></div>
         </div>
-        <div className="flex gap-2">
-           <Button variant={filters.onlyNoAdmin ? 'primary' : 'outline'} size="sm" onClick={() => setFilters(f => ({...f, onlyNoAdmin: !f.onlyNoAdmin}))}>Solo sin admin</Button>
-           <Button variant={filters.onlyActive ? 'primary' : 'outline'} size="sm" onClick={() => setFilters(f => ({...f, onlyActive: !f.onlyActive}))}>Solo activos</Button>
+        <div className="flex items-center gap-4">
+           <Button variant="primary" className="!py-6 gap-4" onClick={() => navigate('/talleres/nuevo')}>
+                NUEVA SEDE
+                <Icon.ArrowUpRight />
+           </Button>
         </div>
       </div>
 
       <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0 overflow-hidden">
-        <div className="flex-1 min-h-[300px] lg:min-h-0 relative bg-white rounded-xl shadow-sm border overflow-hidden">
+        <div className="flex-1 min-h-[300px] lg:min-h-0 relative bg-white rounded-[48px] shadow-sm border border-[#F1E9E2] overflow-hidden">
             <MockMap 
                 workshops={filteredWorkshops} 
                 onPinClick={setSelectedWorkshop} 
@@ -65,69 +68,55 @@ export const WorkshopsMap: React.FC = () => {
             />
 
             {selectedWorkshop && (
-                <div className="absolute top-4 left-4 right-4 md:right-auto md:w-80 animate-fade-in-up z-30">
-                    <Card className="p-4 shadow-2xl border-blue-100">
-                        <div className="flex justify-between items-start mb-3">
+                <div className="absolute top-8 left-8 right-8 md:right-auto md:w-96 animate-fade-in z-30">
+                    <Card className="!p-8 shadow-2xl border-none">
+                        <div className="flex justify-between items-start mb-6">
                             <div>
-                                <h3 className="font-bold text-gray-900">{selectedWorkshop.nombre}</h3>
-                                <p className="text-xs text-gray-500">{selectedWorkshop.ciudad}, {selectedWorkshop.pais}</p>
+                                <p className="eyebrow !text-[10px] mb-1">{selectedWorkshop.ciudad}, {selectedWorkshop.pais}</p>
+                                <h3 className="text-2xl font-extrabold text-[#312A2C] tracking-tighter">{selectedWorkshop.nombre}</h3>
                             </div>
-                            <button onClick={() => setSelectedWorkshop(null)} className="p-1 hover:bg-gray-100 rounded-lg text-gray-400">&times;</button>
+                            <button onClick={() => setSelectedWorkshop(null)} className="w-10 h-10 rounded-full hover:bg-[#F9F6F2] flex items-center justify-center transition-colors">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8A8481" strokeWidth="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
                         </div>
-                        <div className="space-y-3 mb-4">
-                            <div className="text-xs flex flex-col">
-                                <span className="text-gray-400 font-medium uppercase tracking-tighter">Admin General</span>
-                                <span className="text-gray-900 font-semibold">
+                        <div className="space-y-4 mb-8">
+                            <div className="flex flex-col">
+                                <span className="eyebrow !text-[9px] opacity-60">Admin General</span>
+                                <span className="text-[14px] font-bold text-[#312A2C]">
                                     {users.find(u => u.id === selectedWorkshop.adminGeneralUserId)?.nombre || 'Sin asignar'}
                                 </span>
                             </div>
-                            <div className="text-xs flex flex-col">
-                                <span className="text-gray-400 font-medium uppercase tracking-tighter">Dirección</span>
-                                <span className="text-gray-900">{selectedWorkshop.direccion}</span>
-                            </div>
                         </div>
-                        <div className="flex gap-2">
-                            <Button variant="primary" size="sm" className="flex-1" onClick={() => navigate(`/talleres/${selectedWorkshop.id}`)}>Ver detalle</Button>
-                            {!selectedWorkshop.adminGeneralUserId && (
-                                <Button variant="outline" size="sm" className="flex-1">Asignar admin</Button>
-                            )}
+                        <div className="flex gap-4">
+                            <Button variant="primary" size="sm" className="flex-1 !rounded-[20px]" onClick={() => navigate(`/talleres/${selectedWorkshop.id}`)}>VER DETALLE</Button>
                         </div>
                     </Card>
                 </div>
             )}
         </div>
 
-        <div className="w-full lg:w-80 shrink-0 flex flex-col gap-4 bg-white rounded-xl shadow-sm border p-4 overflow-hidden">
-            <div className="space-y-3 shrink-0">
-                <Input placeholder="Buscar por nombre..." value={filters.search} onChange={e => setFilters({...filters, search: e.target.value})} className="h-9" />
+        <div className="w-full lg:w-[400px] shrink-0 flex flex-col gap-6 bg-white rounded-[48px] shadow-sm border border-[#F1E9E2] p-8 overflow-hidden">
+            <div className="space-y-4 shrink-0">
+                <Input placeholder="Buscar por nombre..." value={filters.search} onChange={e => setFilters({...filters, search: e.target.value})} />
                 <Select 
                   options={[{label: 'Todos los países', value: 'Todos'}, ...countryList.map(c => ({label: c, value: c}))]} 
                   value={filters.pais} 
                   onChange={e => setFilters({...filters, pais: e.target.value, ciudad: 'Todas'})} 
-                  className="h-9" 
-                />
-                <Select 
-                  options={availableCities.map(c => ({label: c, value: c}))} 
-                  value={filters.ciudad} 
-                  onChange={e => setFilters({...filters, ciudad: e.target.value})} 
-                  className="h-9"
-                  disabled={filters.pais === 'Todos'}
                 />
             </div>
             
-            <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+            <div className="flex-1 overflow-y-auto space-y-3 pr-2 no-scrollbar">
                 {filteredWorkshops.map(w => (
                     <div 
                         key={w.id} 
-                        className={`p-3 rounded-xl border transition-all cursor-pointer ${selectedWorkshop?.id === w.id ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-transparent hover:bg-gray-50'}`}
+                        className={`p-6 rounded-[32px] border transition-all cursor-pointer ${selectedWorkshop?.id === w.id ? 'border-[#C17D5C] bg-[#FDF8F3] shadow-md' : 'border-transparent bg-[#F9F6F2] hover:bg-[#F4EEE8]'}`}
                         onClick={() => setSelectedWorkshop(w)}
                     >
-                        <div className="flex justify-between items-start">
-                            <h4 className="font-bold text-sm text-gray-900 truncate pr-2">{w.nombre}</h4>
-                            <Badge variant={w.estado === WorkshopStatus.ACTIVE ? 'success' : 'neutral'}>{w.estado === WorkshopStatus.ACTIVE ? 'OK' : 'OFF'}</Badge>
+                        <div className="flex justify-between items-start mb-2">
+                            <h4 className="font-extrabold text-sm text-[#312A2C] truncate pr-2 uppercase tracking-tighter">{w.nombre}</h4>
+                            <Badge variant={w.estado === WorkshopStatus.ACTIVE ? 'yellow' : 'neutral'}>{w.estado === WorkshopStatus.ACTIVE ? 'OK' : 'OFF'}</Badge>
                         </div>
-                        <p className="text-xs text-gray-500">{w.ciudad}</p>
-                        {!w.adminGeneralUserId && <p className="text-[10px] text-orange-600 font-bold mt-1">SÍN ADMIN</p>}
+                        <p className="eyebrow !text-[10px] !text-[#8A8481]">{w.ciudad}</p>
                     </div>
                 ))}
             </div>

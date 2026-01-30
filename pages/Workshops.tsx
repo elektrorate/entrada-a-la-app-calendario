@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
-import { ListCard, SearchPill, EmptyState, Select, Card } from '../components/UI';
+import { ListCard, SearchPill, EmptyState, Select, Card, Button, Icon } from '../components/UI';
 import { WorkshopStatus } from '../types';
 import { useNavigate } from 'react-router-dom';
 import { countryList, countriesData } from '../data/locations';
@@ -45,6 +45,23 @@ export const Workshops: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-12 animate-fade-in">
       
+      {/* Encabezado con Botón de Creación */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
+        <div className="space-y-2">
+          <p className="eyebrow">Red de Producción</p>
+          <h1 className="title-huge text-[#312A2C]">Talleres</h1>
+          <div className="accent-line"></div>
+        </div>
+        <Button 
+          variant="primary" 
+          className="shadow-2xl !py-6 gap-4"
+          onClick={() => navigate('/talleres/nuevo')}
+        >
+          NUEVA SEDE
+          <Icon.ArrowUpRight />
+        </Button>
+      </div>
+
       {/* Controles de Búsqueda y Filtros */}
       <div className="space-y-6">
         <div className="flex justify-center">
