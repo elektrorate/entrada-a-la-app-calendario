@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Card, Badge, Button, EmptyState } from '../components/UI';
+import { Card, Badge, Button, EmptyState, Icon } from '../components/UI';
 import { useParams, useNavigate } from 'react-router-dom';
 import { WorkshopStatus } from '../types';
 
@@ -25,7 +25,9 @@ export const WorkshopDetail: React.FC = () => {
       
       {/* Header Profile */}
       <div className="flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
-          <div className="w-32 h-32 rounded-[40px] bg-[#F4D000] flex items-center justify-center text-5xl shadow-xl">🏺</div>
+          <div className="w-32 h-32 rounded-[40px] bg-[#F4EEE8] flex items-center justify-center text-[#C17D5C] shadow-xl border border-[#F1E9E2]">
+            <Icon.IdCard />
+          </div>
           <div className="flex-1 space-y-2">
               <div className="flex flex-col md:flex-row items-center gap-4">
                 <h1 className="text-4xl font-extrabold tracking-tight">{workshop.nombre}</h1>
@@ -83,7 +85,7 @@ export const WorkshopDetail: React.FC = () => {
           <Card className="md:col-span-2 !p-0 overflow-hidden h-64 bg-gray-100 border-none">
               <div className="w-full h-full bg-[url('https://picsum.photos/1200/400')] bg-cover flex items-center justify-center relative">
                   <div className="absolute inset-0 bg-black/10"></div>
-                  <div className="w-12 h-12 bg-[#F4D000] rounded-full flex items-center justify-center shadow-2xl animate-bounce">
+                  <div className="w-12 h-12 bg-[#C17D5C] text-white rounded-full flex items-center justify-center shadow-2xl animate-bounce">
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg>
                   </div>
                   <div className="absolute bottom-4 right-4">

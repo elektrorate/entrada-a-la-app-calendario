@@ -55,6 +55,15 @@ export const Icon = {
     <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
         <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
     </svg>
+  ),
+  IdCard: () => (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="4" />
+      <path d="M7 8a2 2 0 1 1 4 0v2a2 2 0 1 1-4 0z" />
+      <line x1="14" y1="8" x2="17" y2="8" />
+      <line x1="14" y1="11" x2="17" y2="11" />
+      <line x1="7" y1="15" x2="17" y2="15" />
+    </svg>
   )
 };
 
@@ -64,21 +73,28 @@ export const ActivityPill: React.FC<{
   status: string;
   percentage: string;
   iconBg: string;
-}> = ({ label, value, status, percentage, iconBg }) => (
-  <div className="activity-pill group !py-10 !px-12 bg-[#F4EEE8]/60 hover:bg-[#F4EEE8] rounded-full flex items-center shadow-sm border border-[#F1E9E2]/30">
-    <div className="w-16 h-16 rounded-full flex items-center justify-center text-white mr-10 shrink-0 shadow-lg" style={{ backgroundColor: iconBg }}>
-      <Icon.ArrowUpRight />
+}> = ({ label, value, status, percentage, iconBg }) => {
+  const parts = value.split(' / ');
+  
+  return (
+    <div className="activity-pill group !py-8 !px-10 bg-[#F4EEE8]/50 hover:bg-[#F4EEE8] rounded-[48px] flex items-center shadow-none border border-transparent transition-all">
+      <div className="w-16 h-16 rounded-full flex items-center justify-center text-white mr-8 shrink-0 shadow-lg shadow-black/5" style={{ backgroundColor: iconBg }}>
+        <Icon.ArrowUpRight />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[13px] font-bold text-[#9B9491] uppercase tracking-[0.05em] mb-1.5">{label}</p>
+        <p className="text-[28px] font-extrabold text-[#312A2C] leading-none tracking-tighter">
+          {parts[0]}
+          {parts[1] && <span className="text-[#9B9491] font-bold"> / {parts[1]}</span>}
+        </p>
+      </div>
+      <div className="text-right flex flex-col items-end shrink-0 pl-6">
+        <p className="text-[12px] font-extrabold text-[#9B9491] mb-1.5 uppercase tracking-tight">{status}</p>
+        <p className="text-[26px] font-black text-[#312A2C] tracking-tighter leading-none">{percentage}</p>
+      </div>
     </div>
-    <div className="flex-1">
-      <p className="text-[12px] font-bold text-[#8A8481] uppercase tracking-[0.2em] mb-1">{label}</p>
-      <p className="text-[24px] font-extrabold text-[#312A2C] leading-none tracking-tighter">{value}</p>
-    </div>
-    <div className="text-right flex flex-col items-end">
-      <p className="text-[14px] font-bold text-[#8A8481] mb-1 uppercase tracking-tight">{status}</p>
-      <p className="text-[22px] font-extrabold text-[#312A2C] tracking-tighter leading-none">{percentage}</p>
-    </div>
-  </div>
-);
+  );
+};
 
 export const DaySelector: React.FC<{ days: {num: string, name: string}[], activeDay: string }> = ({ days, activeDay }) => (
   <div className="flex items-center px-4 mb-12 overflow-x-auto gap-6 no-scrollbar py-6 -mx-4">
@@ -208,7 +224,9 @@ export const ListCard: React.FC<{
   onEdit: () => void; 
 }> = ({ title, subtitle, info, badge, onView, onEdit }) => (
   <div className="bg-white p-8 rounded-[32px] border border-[#F1E9E2] hover:border-[#C17D5C] hover:shadow-xl transition-all group flex flex-col md:flex-row md:items-center gap-6">
-    <div className="w-16 h-16 bg-[#FDF8F3] rounded-2xl flex items-center justify-center text-2xl shrink-0 group-hover:bg-[#C17D5C] group-hover:text-white transition-colors">🏺</div>
+    <div className="w-16 h-16 bg-[#FDF8F3] rounded-2xl flex items-center justify-center text-[#C17D5C] shrink-0 group-hover:bg-[#C17D5C] group-hover:text-white transition-colors">
+      <Icon.IdCard />
+    </div>
     <div className="flex-1 min-w-0">
       <div className="flex items-center gap-3 mb-1">
         <h3 className="font-extrabold text-lg text-[#312A2C] truncate uppercase tracking-tighter">{title}</h3>
